@@ -1,50 +1,5 @@
 <?php 
-
-class Rental {
-    public $nama,
-           $diskon,
-           $hargaRental,
-           $pajak,
-           $namaMamber,
-           $waktuHari;
-
-    public function __construct($nama, $waktuHari, $diskon = 5, $hargaRental = 700000, $pajak = 100000, $namaMamber = ["azmi", "udin", "asep"])
-    {
-        $this->nama = $nama;
-        $this->diskon = $diskon;
-        $this->hargaRental = $hargaRental;
-        $this->pajak = $pajak;
-        $this->namaMamber = $namaMamber;
-        $this->waktuHari = $waktuHari;    
-    }
-
-    public function setHarga()
-    {
-        return $this->hargaRental * $this->waktuHari;
-    }
-
-    public function setDiskon()
-    {
-       return ($this->diskon / 100) * $this->setHarga(); 
-    }
-
-    public function isMember()
-    {
-        return in_array($this->nama, $this->namaMamber);
-    }
-
-
-
-    public function setPajak()
-    {
-        if ($this->isMember()) {
-            return ($this->setHarga() + $this->pajak) - $this->setDiskon();
-        } else {
-            return $this->setHarga() + $this->pajak;
-        }
-    }  
-}
-
+require 'ProsesRental.php';
 if(isset($_POST["btn"])){
     $nama = $_POST["nama"];
     $waktuHari = $_POST["waktuJam"];
@@ -58,26 +13,59 @@ if(isset($_POST["btn"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Rental Motor</title>
+    <!-- Link CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0X6mBbQoL5mIy2Q7pFqku2v08PCpzZ45v+L8+4U3hXt/4FFdhDTCpFVRb3m9s" crossorigin="anonymous">
+    <style>
+        /* Custom CSS */
+        .form-container {
+            max-width: 400px;
+            margin: auto;
+            margin-top: 50px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-control {
+            margin-bottom: 15px;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .result-container {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <form action="" method="post">
-        <label for="nama"></label>
-        <input type="text" name="nama" placeholder="Nama">
-        <label for="waktuHari"></label>
-        <input type="number" name="waktuJam" placeholder="Berapa hari">
-        <button type="submit" name="btn">Sewa Sekarang</button>
-    </form>
-
-    <?php if($rental->isMember()) :?>
-
-        <h1>Hai <?= $nama ;?> Terimakasih Telah Menjadi Member Dirental AzmiRentalMotor , Karna anda member anda mendapatkan diskon sebesar 5% Jadi total yang harus kalian bayar adalah <?= $rental->setPajak();?></h1>
-
-    <?php else :?>
-
-        <h1>Hai <?= $nama ;?> Total yang harus di bayar adalah <?= $rental->setPajak();?> </h1>
-
-    <?php endif ;?>
-   
+    <div class="container">
+        <div class="form-container bg-light">
+            <h2 class="mb-4">Sewa Motor</h2>
+            <form action="" method="post">
+               
+            </form>
+        </div>
+        <?php if(isset($rental)) :?>
+            <div class="result-container">
+                <?php if($rental->isMember()) :?>
+                    <div class="alert alert-success" role="alert">
+                        <h4 class="alert-heading">Selamat!</h4>
+                        <p>Hai <?= $nama ;?> Terimakasih Telah Menjadi Member Dirental AzmiRentalMotor, Karna Anda member Anda mendapatkan diskon sebesar 5%. Jadi total yang harus Anda bayar adalah Rp <?= number_format($rental->setPajak());?></p>
+                    </div>
+                <?php else :?>
+                    <div class="alert alert-info" role="alert">
+                        <h4 class="alert-heading">Info</h4>
+                        <p>Hai <?= $nama ;?> Total yang harus dibayar adalah Rp <?= number_format($rental->setPajak());?></p>
+                    </div>
+                <?php endif ;?>
+            </div>
+        <?php endif ;?>
+    </div>
+    <!-- Link Script Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENsSMZVfLXqz+3llZ1hi/CZJBf5CmwKqK+5G1fK1J5EDdtd+I8TS6gkz2+X+3Og9" crossorigin="anonymous"></script>
 </body>
 </html>
